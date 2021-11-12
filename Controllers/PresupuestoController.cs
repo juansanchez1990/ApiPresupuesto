@@ -503,14 +503,14 @@ namespace ApiPresupuesto.Controllers
         public IHttpActionResult postPresupuesto(Presupuesto_Detalle detalle, int idConcepto )
         {
 
-            var MontoActual = data.Presupuesto_Detalle.Sum(x => x.Monto);
+            var MontoActual = data.Presupuesto_Detalle.Where(i => i.Id_Presupuesto_Header == detalle.Id_Presupuesto_Header).Sum(x => x.Monto);
             if (MontoActual == null)
             {
                 MontoActual = 0;
             }
             var MontoSumado = MontoActual + detalle.Monto;
             DateTime startDate = DateTime.Now;
-            var Limite = data.Presupuesto_Header.FirstOrDefault(i => i.Id_Categoria_Presupuesto == detalle.Id_Presupuesto_Header && (i.Activo == "Activo" || startDate<=i.Hasta));
+            var Limite = data.Presupuesto_Header.FirstOrDefault(i => i.Id_Categoria_Presupuesto == detalle.Id_Presupuesto_Header && i.Activo == "Activo" || startDate<=i.Hasta);
             // var DataLimite = data.Presupuesto_Header.Where(i => i.id == 1);
 
             if (Limite == null)
